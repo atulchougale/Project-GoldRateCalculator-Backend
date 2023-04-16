@@ -3,10 +3,6 @@ import mongoose from "mongoose";
 const goldRateSchema = new mongoose.Schema({
     currency: String,
     rate:Number,
-    actualGoldPrice: Number,
-    makingCharges: Number,
-    GST: Number,
-    goldPrice: Number,
     date: Date,
 });
 
