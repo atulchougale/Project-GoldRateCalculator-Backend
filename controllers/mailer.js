@@ -4,21 +4,19 @@ import Mailgen from 'mailgen';
 import dotenv from 'dotenv';
 dotenv.config();
 
-let nodeConfig ={
-    host: "smtp.ethereal.email",
-    port: 587,
-    secure: false, // true for 465, false for other ports
+let nodeConfig = {
+    service: 'gmail',
     auth: {
-      user: process.env.EMAIL, // generated ethereal user
-      pass: process.env.PASSWORD, // generated ethereal password
-    },
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD
+    }
 }
 
 let transporter = nodemailer.createTransport(nodeConfig);
 
 let MailGenerator = new Mailgen({
     theme: "default",
-    product : {
+    product: {
         name: "Mailgen",
         link: 'https://mailgen.js/'
     }
@@ -41,25 +39,28 @@ export const registerMail = async (req, res) => {
     const subject = req.body.subject || "Signup Successful";
 
     // Define the email body
-    const emailBody = `
-        <p>Hi ${username},</p>
-        <p>${text}</p>
-        <p>Need help or have questions? Just reply to this email, we'd love to help.</p>
-    `;
-
+    const emailBody = {
+        body: {
+            name: username,
+            intro: text,
+            outro: 'Need help or have questions? Just reply to this email, we\'d love to help.'
+        }
+    };
+    let mail = MailGenerator.generate(emailBody)
     // Define the email message
     const message = {
         from: process.env.EMAIL,
         to: userEmail,
         subject: subject,
-        html: emailBody
+        html: mail
     };
 
     try {
         // Send the email
         await transporter.sendMail(message);
-        return res.status(200).send({ msg: "You should receive an email from us." });
+        return res.status(200).send({ message: "You should receive an email from us." });
     } catch (error) {
+        console.log(error)
         return res.status(500).send({ error });
     }
 };

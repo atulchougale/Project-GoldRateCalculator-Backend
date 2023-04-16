@@ -14,6 +14,7 @@ const JWT_SECRET = process.env.SECRET_KEY
 
         next()
     } catch (error) {
+        console.log(error)
         req.status(401).json({error:"Authemtication Failed"})
     }
 }

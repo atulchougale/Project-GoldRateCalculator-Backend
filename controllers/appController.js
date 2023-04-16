@@ -188,11 +188,10 @@ export const verifyOTP =async(req,res)=>{
 // successfully redirect user when OTP is valid
 /** GET: http://localhost:5000/user/createResetSession */
 export const createResetSession =async(req,res)=>{
-    if(req.app.locals.resetSession){
-        req.app.local.resetSession  = false //allow access to this route only once 
-        return res.status(201).send({ msg:"access granted...!"})
-   }
-   return res.status(440).send({error : "Session expired!"})
+  if(req.app.locals.resetSession){
+    return res.status(201).send({ flag : req.app.locals.resetSession})
+}
+return res.status(440).send({error : "Session expired!"})
 }
 
 
